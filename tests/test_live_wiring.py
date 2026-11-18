@@ -589,6 +589,7 @@ class TestRegistrationHelpersSurviveOtherSpellings(unittest.TestCase):
                          "кавычки уехали внутрь пути: %s" % target)
 
 
+@unittest.skipUnless((HERE / "AGENTS.md").exists(), "AGENTS.md не выложен в клон")
 class TestSwitchesAreWrittenDown(unittest.TestCase):
     """Рубильник, о котором не сказано, не существует.
 

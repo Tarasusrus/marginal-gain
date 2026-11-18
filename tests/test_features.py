@@ -25,8 +25,8 @@ ROOT = Path(__file__).resolve().parent.parent
 # стенда, а не выбрасываем: с лабораторией на машине они снова работают.
 LAB = ROOT / "research" / "lab" / "x7"
 sys.path.append(str(LAB))
-HAS_LAB = (LAB / "feat.py").exists()
-needs_lab = unittest.skipUnless(HAS_LAB, "стенда research/lab/x7 нет в клоне")
+HAS_LAB = (LAB / "feat.py").exists() and (LAB / "occ7.pkl").exists()
+needs_lab = unittest.skipUnless(HAS_LAB, "стенда research/lab/x7 с данными нет в клоне")
 
 from domain import features # noqa: E402
 from pipeline import understand # noqa: E402

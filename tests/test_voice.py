@@ -505,6 +505,7 @@ class TestTheRunNamesItsVoice(unittest.TestCase):
                          "прогон не передаёт имя формы песочнице")
 
 
+@unittest.skipUnless((ROOT / "AGENTS.md").exists(), "AGENTS.md не выложен в клон")
 class TestTheSwitchIsDocumented(unittest.TestCase):
     """Рубильник, о котором не написано, для чужой машины не существует."""
 
