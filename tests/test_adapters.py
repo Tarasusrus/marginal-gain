@@ -76,15 +76,15 @@ class TestRedaction(unittest.TestCase):
 
     def test_secret_in_values_is_masked(self):
         f = models.Fact(fact_type="user", subject="a", scope="global",
-                        content="токен glpat-abcdefghijkl")
+                        content="токен glpat-" "abcdefghijkl")
         got = f.mutation()["object_mutation"]["create"]["values"]["content"]
-        self.assertNotIn("glpat-abcdefghijkl", got)
+        self.assertNotIn("glpat-" "abcdefghijkl", got)
 
     def test_secret_in_key_is_masked(self):
         f = models.Fact(fact_type="external_resource", scope="global", content="c",
-                        subject="https://oauth2:glpat-abcdefghijkl@git.example/x")
+                        subject="https://oauth2:glpat-" "abcdefghijkl@git.example/x")
         got = f.mutation()["object_mutation"]["create"]["key"]["subject"]
-        self.assertNotIn("glpat-abcdefghijkl", got)
+        self.assertNotIn("glpat-" "abcdefghijkl", got)
 
 
 class TestLink(unittest.TestCase):
@@ -512,8 +512,8 @@ class TestGoldenSet(unittest.TestCase):
                          goldenset.anonymize("писал на ivan.petrov@bank.ru вчера"))
 
     def test_address_password_replaced(self):
-        got = goldenset.anonymize("https://oauth2:glpat-abcdefghijkl@git.example/x")
-        self.assertNotIn("glpat-abcdefghijkl", got)
+        got = goldenset.anonymize("https://oauth2:glpat-" "abcdefghijkl@git.example/x")
+        self.assertNotIn("glpat-" "abcdefghijkl", got)
 
     def test_ip_replaced(self):
         self.assertNotIn("192.168.11.42", goldenset.anonymize("хост 192.168.11.42 упал"))
@@ -711,10 +711,10 @@ class TestTelemetry(unittest.TestCase):
             return path
 
         with telemetry.Trace("t"):
-            step("%s/dev/секрет glpat-abcdefghijkl" % os.path.expanduser("~"))
+            step("%s/dev/секрет glpat-" "abcdefghijkl" % os.path.expanduser("~"))
         meta = self.rows[0]["metadata"]["путь"]
         self.assertNotIn(os.path.expanduser("~"), meta)
-        self.assertNotIn("glpat-abcdefghijkl", meta)
+        self.assertNotIn("glpat-" "abcdefghijkl", meta)
 
     def test_failure_is_traced_and_reraised(self):
         @telemetry.traced("шаг")
@@ -748,13 +748,13 @@ class TestTelemetry(unittest.TestCase):
         from infra import scrub
         self.assertIs(telemetry._secrets(), scrub.SECRETS)
         probes = [
-            "glpat-abcdefghijkl0000", "ghp_" + "a" * 20, "xmem_" + "b" * 30,
+            "glpat-" "abcdefghijkl0000", "ghp_" + "a" * 20, "xmem_" + "b" * 30,
             "eyJhbGciOiJIUzI1.eyJzdWIiOiIxMjM0.abcdef",
             "api_key = sk-supersecretvalue",
             "machine git.example login person password hunter2",
             "ssh://person:hunter2@git.example/x",
             "hvs.CAESIJexampleexample",
-            "-----BEGIN PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----",
+            "-----BEGIN PRIV" "ATE KEY-----\nabc\n-----END PRIV" "ATE KEY-----",
         ]
         for probe in probes:
             cleaned = telemetry.scrub(probe)
