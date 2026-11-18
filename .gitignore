@@ -15,3 +15,10 @@ eval-audit.db
 eval-audit.db-wal
 eval-audit.db-shm
 eval-audit.db-journal
+
+# Среда разработки и кэш линтера: к коду не относятся.
+.idea/
+.ruff_cache/
+.venv/
+venv/
+node_modules/
